@@ -1,0 +1,13 @@
+bin/
+obj/
+data/
+log/
+secrets/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.idea/
+.vs/
+.git/
+Properties
+*.user
