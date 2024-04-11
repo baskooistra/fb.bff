@@ -1,35 +1,44 @@
+using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
+using Web.BFF.Domain.Configuration;
+using CommunityToolkit.Diagnostics;
+using Web.BFF.API.Endpoints.v1.Controllers;
+using Web.BFF.API.Endpoints.v1.Models.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Web.BFF.API.Extensions;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.Configure<WebAppConfiguration>(
+    builder.Configuration.GetSection(WebAppConfiguration.Key));
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddFrontendCors();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
-
+builder.WebHost.UseKestrelHttpsConfiguration();
 var app = builder.Build();
-
-var sampleTodos = new Todo[]
+if (app.Environment.IsDevelopment())
 {
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-};
-
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+app.UseHttpsRedirection();
+app.UseCors("localhost");
+app.MapConfigurationEndpoints();
 
 app.Run();
 
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
 
-[JsonSerializable(typeof(Todo[]))]
+[JsonSerializable(typeof(WebAppConfigurationResponse))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }

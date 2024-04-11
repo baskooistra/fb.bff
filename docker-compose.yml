@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  web.bff.api:
+    image: ${DOCKER_REGISTRY-}webbffapi
+    build:
+      context: .
+      dockerfile: Web.BFF.API/Dockerfile

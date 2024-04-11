@@ -1,11 +1,6 @@
 @Web.BFF.API_HostAddress = http://localhost:5193
 
-GET {{Web.BFF.API_HostAddress}}/todos/
-Accept: application/json
-
-###
-
-GET {{Web.BFF.API_HostAddress}}/todos/1
+GET {{Web.BFF.API_HostAddress}}/api/configuration
 Accept: application/json
 
 ###
