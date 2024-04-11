@@ -1,10 +1,15 @@
-﻿using Microsoft.Extensions.Options;
+﻿using CommunityToolkit.Diagnostics;
+using Microsoft.Extensions.Options;
 using Web.BFF.Domain.Configuration;
+using Azure.Identity;
 
 namespace Web.BFF.API.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        const string AppConfigurationEndpoint = "ConfigurationEndpoint";
+        const string AppConfigurationKey = "ConfigurationKey";
+
         public static IServiceCollection AddFrontendCors(this IServiceCollection services)
         {
             using var serviceProvider = services.BuildServiceProvider();
@@ -28,6 +33,25 @@ namespace Web.BFF.API.Extensions
 
                 return services;
             }
+        }
+
+        public static WebApplicationBuilder AddCloudHostedServices(this WebApplicationBuilder builder)
+        {
+            builder.Configuration.AddAzureAppConfiguration(options =>
+            {
+                var endpoint = builder.Configuration.GetValue<string>(AppConfigurationEndpoint);
+                var configurationKey = builder.Configuration.GetValue<string>(AppConfigurationKey) + ":";
+                var environmentName = builder.Environment.EnvironmentName;
+
+                Guard.IsNotNullOrWhiteSpace(endpoint);
+                var config = options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
+                    .Select($"{configurationKey}*", environmentName)
+                    .TrimKeyPrefix(configurationKey);
+            });
+
+            builder.Services.AddApplicationInsightsTelemetry();
+
+            return builder;
         }
     }
 }

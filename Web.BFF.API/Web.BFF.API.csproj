@@ -28,6 +28,9 @@
 	    <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.2.2" />
 	    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
 	    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="7.1.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+		<PackageReference Include="Azure.Identity" Version="1.11.0" />
     </ItemGroup>
 
     <ItemGroup>

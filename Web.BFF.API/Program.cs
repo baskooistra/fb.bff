@@ -13,6 +13,9 @@ var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.Configure<WebAppConfiguration>(
     builder.Configuration.GetSection(WebAppConfiguration.Key));
 
+if (!builder.Environment.IsDevelopment())
+    builder.AddCloudHostedServices();
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddFrontendCors();
 
