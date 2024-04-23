@@ -6,10 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-Web.BFF.API-dd85611e-e01b-43c6-a068-b65122c4fab0</UserSecretsId>
         <InvariantGlobalization>true</InvariantGlobalization>
-        <PublishAot>true</PublishAot>
+        <PublishAot>false</PublishAot>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
     </PropertyGroup>
 
     <ItemGroup>
