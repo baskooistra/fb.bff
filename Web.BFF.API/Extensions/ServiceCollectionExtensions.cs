@@ -47,6 +47,7 @@ namespace Web.BFF.API.Extensions
 
                 Guard.IsNotNullOrWhiteSpace(endpoint);
                 var config = options.Connect(new Uri(endpoint), new ManagedIdentityCredential())
+                    .ConfigureKeyVault(kv => kv.SetCredential(new ManagedIdentityCredential()))
                     .Select($"{configurationKey}*", environmentName)
                     .TrimKeyPrefix(configurationKey);
             });
