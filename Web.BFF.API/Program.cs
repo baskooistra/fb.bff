@@ -1,11 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 using Web.BFF.Domain.Configuration;
-using CommunityToolkit.Diagnostics;
 using Web.BFF.API.Endpoints.v1.Controllers;
 using Web.BFF.API.Endpoints.v1.Models.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 using Web.BFF.API.Extensions;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -13,9 +9,11 @@ var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.Configure<WebAppConfiguration>(
     builder.Configuration.GetSection(WebAppConfiguration.Key));
 
+builder.AddLogging();
+
 if (!builder.Environment.IsDevelopment())
     builder.AddCloudHostedServices();
-
+    
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddFrontendCors();
 

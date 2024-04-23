@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using Web.BFF.Domain.Configuration;
 using Azure.Identity;
+using Serilog;
+using Serilog.Events;
 
 namespace Web.BFF.API.Extensions
 {
@@ -50,6 +52,17 @@ namespace Web.BFF.API.Extensions
             });
 
             builder.Services.AddApplicationInsightsTelemetry();
+
+            return builder;
+        }
+
+        public static WebApplicationBuilder AddLogging(this WebApplicationBuilder builder)
+        {
+            builder.Host.UseSerilog((ctx, lc) => lc
+            .WriteTo.Console(LogEventLevel.Debug, outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+            .WriteTo.ApplicationInsights(TelemetryConverter.Events, LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .ReadFrom.Configuration(ctx.Configuration));
 
             return builder;
         }
