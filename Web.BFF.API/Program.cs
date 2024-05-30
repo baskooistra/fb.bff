@@ -33,7 +33,7 @@ else
     app.UseHsts();
 }
 app.UseHttpsRedirection();
-app.UseCors("localhost");
+app.UseCors();
 app.MapConfigurationEndpoints();
 
 app.Run();
